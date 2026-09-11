@@ -481,3 +481,7 @@ h4.sub { font-size: 13px; color: var(--muted); margin: 14px 0 6px; text-transfor
 }
 .me-avatar { width: 36px; height: 36px; border-radius: 50%; background: #fff; display: grid; place-items: center; flex: none; box-shadow: 0 0 0 1.5px #d6e6ff, 0 4px 10px rgba(42,123,255,.18); }
 .me-avatar img { width: 22px; height: 22px; object-fit: contain; }
+
+/* hide scrollbars (still scrollable) */
+html, body, .sidebar nav { scrollbar-width: none; -ms-overflow-style: none; }
+html::-webkit-scrollbar, body::-webkit-scrollbar, .sidebar nav::-webkit-scrollbar { display: none; width: 0; height: 0; }
