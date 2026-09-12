@@ -14,7 +14,7 @@ function exportCsv(list, title) {
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
 
-export default function Documents({ docs, go, filter, title, initialQ = "" }) {
+export default function Documents({ docs, go, filter, title, subtitle, initialQ = "" }) {
   const [q, setQ] = useState(initialQ);
   const [type, setType] = useState("");
   const [status, setStatus] = useState("");
@@ -30,7 +30,8 @@ export default function Documents({ docs, go, filter, title, initialQ = "" }) {
   return (
     <div className="page">
       <div className="page-head">
-        <div><h1>{title}</h1><p className="muted">{list.length} văn bản{q && <> · kết quả cho "<b>{q}</b>" <button className="link" onClick={() => setQ("")}>Xóa lọc</button></>}</p></div>
+        <div><h1>{title}</h1>
+          {subtitle && <p className="muted">{subtitle}</p>}<p className="muted">{list.length} văn bản{q && <> · kết quả cho "<b>{q}</b>" <button className="link" onClick={() => setQ("")}>Xóa lọc</button></>}</p></div>
         <div className="page-actions">
           <button className="btn ghost" onClick={() => exportCsv(list, title)} disabled={!list.length}><Icon name="download" size={16} />Xuất Excel</button>
           <button className="btn primary" onClick={() => go("create")}><Icon name="plus" size={16} />Tạo văn bản</button>

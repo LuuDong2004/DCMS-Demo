@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Icon, Badge, TypeTag, Card, Avatar } from "../ui";
 import { allowedActions, SYNC_SOURCES } from "../engine";
+import { actionsFor, isAssignee, can } from "../accounts";
 
+const KIND_ICON = { system: "plus", ai: "ai", approve: "check", sign: "sign", publish: "send", sync: "refresh" };
 const DONE_LABEL = { system: "Đã tạo", ai: "Đã phân tích", approve: "Đã duyệt", sign: "Đã ký", publish: "Hoàn tất", sync: "Đã đồng bộ" };
 const MODAL = {
   approve: { title: "Phê duyệt văn bản", btn: "Phê duyệt", need: false, ph: "Ý kiến phê duyệt (không bắt buộc)…" },
@@ -12,13 +14,14 @@ const MODAL = {
   resubmit: { title: "Trình lại văn bản", btn: "Trình lại", need: false, ph: "Mô tả nội dung đã chỉnh sửa…" },
 };
 
-export default function DocumentDetail({ doc, go, onAction }) {
+export default function DocumentDetail({ doc, go, onAction, user, onRemind }) {
   const [tab, setTab] = useState("info");
   const [modal, setModal] = useState(null);
   const [note, setNote] = useState("");
   if (!doc) return <div className="page"><button className="link back" onClick={() => go("docs")}><Icon name="back" size={16} />Quay lại danh sách</button><p className="muted">Không tìm thấy văn bản.</p></div>;
 
-  const actions = allowedActions(doc);
+  const allowed = allowedActions(doc);
+  const actions = actionsFor(doc, user, allowed);
   const cur = doc.steps.find((s) => s.state === "current");
   const rejected = doc.steps.find((s) => s.state === "rejected");
   const analyzing = cur?.kind === "ai";
@@ -43,8 +46,13 @@ export default function DocumentDetail({ doc, go, onAction }) {
           {actions.includes("sign") && <button className="btn primary" onClick={() => setModal("sign")}><Icon name="sign" size={16} />Ký số</button>}
           {actions.includes("publish") && <button className="btn primary" onClick={() => setModal("publish")}><Icon name="send" size={16} />Phát hành</button>}
           {actions.includes("resubmit") && <button className="btn primary" onClick={() => setModal("resubmit")}><Icon name="send" size={16} />Trình lại</button>}
+          {allowed.length > 0 && actions.length === 0 && onRemind && <button className="btn ghost" onClick={() => onRemind(doc.id)}><Icon name="bell" size={16} />Nhắc việc</button>}
         </div>
       </div>
+
+      {allowed.length > 0 && actions.length === 0 && cur && (
+        <div className="doc-banner info"><Icon name="shield" size={18} /><div><b>Bước "{cur.name}" thuộc quyền của {cur.who}</b><span>Bạn đang đăng nhập là {user?.name} · {user?.role}. Đăng nhập bằng tài khoản được gán để thực hiện bước này, hoặc bấm “Nhắc việc”.</span></div></div>
+      )}
 
       {doc.returned && (
         <div className="doc-banner warn"><Icon name="refresh" size={18} /><div><b>Yêu cầu chỉnh sửa tại bước "{doc.returned.step}"</b><span>{doc.returned.by} · {doc.returned.time} · "{doc.returned.note}"</span></div></div>
@@ -123,7 +131,12 @@ export default function DocumentDetail({ doc, go, onAction }) {
             <ul className="wf">
               {doc.steps.map((s, i) => (
                 <li key={i} className={s.state}>
-                  <span className="wf-dot">{s.state === "done" ? <Icon name="check" size={11} /> : s.state === "rejected" ? <Icon name="x" size={11} /> : i + 1}</span>
+                  <span className="wf-dot">
+                    {s.state === "done" ? <Icon name="check" size={12} />
+                      : s.state === "rejected" ? <Icon name="x" size={12} />
+                      : <Icon name={KIND_ICON[s.kind] || "clock"} size={12} />}
+                    {s.state === "current" && <i className="wf-pulse" />}
+                  </span>
                   <div className="wf-body">
                     <div className="wf-top"><b>{s.name}</b><Badge tone={s.state === "done" ? "ok" : s.state === "current" ? (doc.returned ? "orange" : "info") : s.state === "rejected" ? "danger" : "muted"}>{s.state === "done" ? DONE_LABEL[s.kind] || "Hoàn thành" : s.state === "current" ? (doc.returned ? "Chờ chỉnh sửa" : "Đang xử lý") : s.state === "rejected" ? "Từ chối" : "Chờ"}</Badge></div>
                     <small>{s.who}{s.time && ` · ${s.time}`}</small>
