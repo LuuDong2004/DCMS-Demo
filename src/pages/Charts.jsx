@@ -7,11 +7,11 @@ const ANIM = !location.search.includes("static");
 const C = { blue: "#1f5fbf", teal: "#12b5a5", amber: "#f2a33a", purple: "#8b5cf6", red: "#e05252", green: "#22a55b", grey: "#c9d3e0", navy: "#1a3a6b" };
 
 export const BY_STATUS = [
-  { name: "Đang xử lý", value: 14, color: C.blue },
-  { name: "Chờ phê duyệt", value: 9, color: C.amber },
-  { name: "Chờ ký số", value: 5, color: C.purple },
-  { name: "Đã hoàn tất", value: 31, color: C.teal },
-  { name: "Từ chối", value: 4, color: C.red },
+  { name: "Đang xử lý", value: 14, color: "#3fd0ff" },
+  { name: "Chờ phê duyệt", value: 9, color: "#93c5fd" },
+  { name: "Chờ ký số", value: 5, color: "#1846d6" },
+  { name: "Đã hoàn tất", value: 31, color: "#2a7bff" },
+  { name: "Từ chối", value: 4, color: "#f87171" },
 ];
 export const BY_TYPE = [
   { name: "Công văn đến", value: 20, color: C.blue }, { name: "Công văn đi", value: 12, color: C.teal }, { name: "Hợp đồng", value: 8, color: C.amber }, { name: "Quyết định", value: 6, color: C.purple }, { name: "Khác", value: 10, color: C.grey },
@@ -84,8 +84,8 @@ export function WeeklyBars({ height = 240 }) {
         <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "#6b7788" }} width={28} />
         <Tooltip cursor={{ fill: "#f4f6fb" }} contentStyle={tipStyle} />
         <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 12 }} />
-        <Bar dataKey="in" name="Văn bản đến" fill={C.blue} radius={[6, 6, 0, 0]} animationDuration={800} isAnimationActive={ANIM} />
-        <Bar dataKey="out" name="Văn bản đi" fill={C.teal} radius={[6, 6, 0, 0]} animationDuration={800} isAnimationActive={ANIM} />
+        <Bar dataKey="in" name="Văn bản đến" fill="#2a7bff" radius={[6, 6, 0, 0]} animationDuration={800} isAnimationActive={ANIM} />
+        <Bar dataKey="out" name="Văn bản đi" fill="#93c5fd" radius={[6, 6, 0, 0]} animationDuration={800} isAnimationActive={ANIM} />
       </BarChart>
     </ResponsiveContainer>
   );
@@ -115,8 +115,8 @@ export function DeptBars({ height = 230 }) {
         <YAxis type="category" dataKey="d" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "#26313f" }} width={78} />
         <Tooltip cursor={{ fill: "#f4f6fb" }} contentStyle={tipStyle} />
         <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 12 }} />
-        <Bar dataKey="done" name="Đã xử lý" stackId="a" fill={C.teal} radius={[0, 0, 0, 0]} animationDuration={800} isAnimationActive={ANIM} />
-        <Bar dataKey="pending" name="Đang chờ" stackId="a" fill={C.amber} radius={[0, 6, 6, 0]} animationDuration={800} isAnimationActive={ANIM} />
+        <Bar dataKey="done" name="Đã xử lý" stackId="a" fill="#2a7bff" radius={[0, 0, 0, 0]} animationDuration={800} isAnimationActive={ANIM} />
+        <Bar dataKey="pending" name="Đang chờ" stackId="a" fill="#93c5fd" radius={[0, 6, 6, 0]} animationDuration={800} isAnimationActive={ANIM} />
       </BarChart>
     </ResponsiveContainer>
   );
@@ -130,7 +130,7 @@ export function AILine({ height = 200 }) {
         <XAxis dataKey="m" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "#6b7788" }} />
         <YAxis domain={[70, 100]} axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "#6b7788" }} width={40} unit="%" />
         <Tooltip contentStyle={tipStyle} formatter={(v) => [`${v}%`, "Độ chính xác đề xuất"]} />
-        <Line type="monotone" dataKey="acc" stroke={C.purple} strokeWidth={2.5} dot={{ r: 4, fill: "#fff", strokeWidth: 2 }} activeDot={{ r: 6 }} animationDuration={900} isAnimationActive={ANIM} />
+        <Line type="monotone" dataKey="acc" stroke="#2a7bff" strokeWidth={2.5} dot={{ r: 4, fill: "#fff", strokeWidth: 2 }} activeDot={{ r: 6 }} animationDuration={900} isAnimationActive={ANIM} />
       </LineChart>
     </ResponsiveContainer>
   );
