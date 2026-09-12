@@ -1074,3 +1074,9 @@ html[data-theme="dark"] .wfg-tile.wt3:hover .wt3-go { color: var(--blue); }
 /* hero left: pull content up, align title with top source cards */
 .ai-hero-left.hl2 { justify-content: flex-start; padding-top: 30px; }
 @media (max-width: 1100px) { .ai-hero-left.hl2 { padding-top: 0; } }
+
+/* hero left: restored blocks, tighter rhythm */
+.ai-hero-left.hl2 { gap: 20px; }
+.hl-feats { gap: 10px; }
+.hl-feats li { font-size: 14px; }
+.ai-hero-left.hl2 .hl-src { margin-top: auto; }
