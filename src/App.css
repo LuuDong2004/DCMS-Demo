@@ -514,3 +514,16 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, .sidebar nav::-webkit-scrollba
 .hx-stage b { font-size: 12.5px; font-weight: 600; color: var(--navy); }
 .hx-node { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: #fff; color: #2a7bff; border: 2px solid #cfe0f7; box-shadow: 0 4px 12px rgba(26,58,107,.08); animation: hxNode 4s ease-in-out infinite; }
 @keyframes hxNode { 0%, 100% { background: #fff; color: #2a7bff; border-color: #cfe0f7; } 12%, 22% { background: linear-gradient(135deg, #3fd0ff, #1846d6); color: #fff; border-color: transparent; box-shadow: 0 6px 16px rgba(42,123,255,.4); } 34% { background: #fff; color: #2a7bff; border-color: #cfe0f7; } }
+
+/* hero v2 refinements */
+.hx-card::before { display: none; }
+.hx-card { border-radius: 14px; border-color: #e1e9f5; box-shadow: 0 2px 10px rgba(26,58,107,.05); }
+.hx-node { position: relative; animation: none; background: #fff; color: #2a7bff; border: 2px solid #d6e4f7; box-shadow: 0 3px 10px rgba(26,58,107,.07); }
+.hx-node::before { content: ""; position: absolute; inset: -2px; border-radius: 50%; background: linear-gradient(135deg, #3fd0ff 0%, #2a7bff 55%, #1846d6 100%); opacity: 0; animation: hxOn 4s ease-in-out infinite; animation-delay: inherit; }
+.hx-node::after { content: ""; position: absolute; inset: -8px; border-radius: 50%; border: 2px solid rgba(42,123,255,.28); opacity: 0; transform: scale(.85); animation: hxRing 4s ease-out infinite; animation-delay: inherit; }
+.hx-node .ic { position: relative; z-index: 1; animation: hxIc 4s ease-in-out infinite; animation-delay: inherit; }
+.hx-stage b { animation: hxLb 4s ease-in-out infinite; animation-delay: inherit; }
+@keyframes hxOn { 0%, 100% { opacity: 0; } 8%, 22% { opacity: 1; } 34% { opacity: 0; } }
+@keyframes hxRing { 0%, 6% { opacity: 0; transform: scale(.85); } 14% { opacity: 1; transform: scale(1); } 30%, 100% { opacity: 0; transform: scale(1.15); } }
+@keyframes hxIc { 0%, 100% { color: #2a7bff; } 8%, 22% { color: #fff; } 34% { color: #2a7bff; } }
+@keyframes hxLb { 0%, 100% { color: #1a3a6b; } 8%, 22% { color: #2a7bff; } 34% { color: #1a3a6b; } }

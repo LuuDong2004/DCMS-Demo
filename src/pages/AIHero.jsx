@@ -22,10 +22,8 @@ const ANG = [-32, 0, 32];
 const TRACK_Y = 360, TRACK_X0 = 160, TRACK_X1 = 740;
 
 const rad = (d) => (d * Math.PI) / 180;
-function entry(side, i) {
-  const a = rad(ANG[i]);
-  const r = R + 10;
-  return side === "l" ? [CX - r * Math.cos(a), CY + r * Math.sin(a)] : [CX + r * Math.cos(a), CY + r * Math.sin(a)];
+function entry(side) {
+  return side === "l" ? [CX - R - 10, CY] : [CX + R + 10, CY];
 }
 function curve(x1, y1, x2, y2) {
   const dx = (x2 - x1) * 0.5;
@@ -51,7 +49,6 @@ function SysCard({ x, y, s, side }) {
       <div xmlns="http://www.w3.org/1999/xhtml" className={`hx-card ${side}`} style={{ "--c": s.color }}>
         <span className="hx-ic"><Icon name={s.icon} size={18} /></span>
         <div className="hx-txt"><b>{s.name}</b><small>{s.sub}</small></div>
-        <span className="hx-count">{s.count}</span>
         <i className="hx-port" />
       </div>
     </foreignObject>
@@ -60,8 +57,8 @@ function SysCard({ x, y, s, side }) {
 
 export default function AIHero() {
   const flows = [
-    ...LEFT.map((s, i) => { const [ex, ey] = entry("l", i); return { s, d: curve(CARD_X + CARD_W + 4, ys[i] + CARD_H / 2, ex, ey), ex, ey }; }),
-    ...RIGHT.map((s, i) => { const [ex, ey] = entry("r", i); return { s, d: curve(W - CARD_X - CARD_W - 4, ys[i] + CARD_H / 2, ex, ey), ex, ey }; }),
+    ...LEFT.map((s, i) => { const [ex, ey] = entry("l"); return { s, d: curve(CARD_X + CARD_W + 4, ys[i] + CARD_H / 2, ex, ey), ex, ey }; }),
+    ...RIGHT.map((s, i) => { const [ex, ey] = entry("r"); return { s, d: curve(W - CARD_X - CARD_W - 4, ys[i] + CARD_H / 2, ex, ey), ex, ey }; }),
   ];
   const order = [0, 3, 1, 4, 2, 5];
   const down = `M${CX},${CY + R + 10} L${CX},${TRACK_Y - 24}`;
@@ -121,7 +118,7 @@ export default function AIHero() {
 
         {/* output pipeline */}
         <path d={down} stroke="#2a7bff" strokeWidth="2" strokeOpacity=".35" strokeDasharray="2 7" strokeLinecap="round" className="hx-dash" />
-        <circle r="4" fill="#2a7bff"><animateMotion dur="1.8s" repeatCount="indefinite" path={down} /></circle>
+        <Packet path={down} color="#2a7bff" label="Đã xử lý" delay={0.4} dur={2.6} />
         <path d={track} stroke="#e1e9f5" strokeWidth="6" strokeLinecap="round" />
         <path d={track} stroke="url(#hxTrack)" strokeWidth="6" strokeLinecap="round" strokeOpacity=".35" />
         <rect x={TRACK_X0 - 60} y={TRACK_Y - 3} width="120" height="6" rx="3" fill="url(#hxBeam)">
@@ -131,8 +128,8 @@ export default function AIHero() {
           const x = TRACK_X0 + i * step;
           return (
             <foreignObject key={st.label} x={x - 60} y={TRACK_Y - 20} width="120" height="70">
-              <div xmlns="http://www.w3.org/1999/xhtml" className="hx-stage" style={{ animationDelay: `${i * 0.8}s` }}>
-                <span className="hx-node" style={{ animationDelay: `${i * 0.8}s` }}><Icon name={st.icon} size={16} /></span>
+              <div xmlns="http://www.w3.org/1999/xhtml" className="hx-stage" style={{ animationDelay: `${i - 0.7}s` }}>
+                <span className="hx-node" style={{ animationDelay: `${i - 0.7}s` }}><Icon name={st.icon} size={16} /></span>
                 <b>{st.label}</b>
               </div>
             </foreignObject>
