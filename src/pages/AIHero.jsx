@@ -16,7 +16,7 @@ const STAGES = [
 
 const W = 900, H = 430;
 const CX = 450, CY = 150, R = 60;
-const CARD_W = 236, CARD_H = 62, GAP = 22, CARD_X = 6;
+const CARD_W = 214, CARD_H = 62, GAP = 22, CARD_X = 14;
 const ys = [CY - CARD_H / 2 - (CARD_H + GAP), CY - CARD_H / 2, CY - CARD_H / 2 + (CARD_H + GAP)];
 const ANG = [-32, 0, 32];
 const TRACK_Y = 360, TRACK_X0 = 160, TRACK_X1 = 740;
@@ -46,10 +46,10 @@ function Packet({ path, color, label, delay, dur = 4.2 }) {
 function SysCard({ x, y, s, side }) {
   return (
     <foreignObject x={x} y={y} width={CARD_W} height={CARD_H}>
-      <div xmlns="http://www.w3.org/1999/xhtml" className={`hx-card ${side}`} style={{ "--c": s.color }}>
-        <span className="hx-ic"><Icon name={s.icon} size={18} /></span>
-        <div className="hx-txt"><b>{s.name}</b><small>{s.sub}</small></div>
-        <i className="hx-port" />
+      <div xmlns="http://www.w3.org/1999/xhtml" className={`hs-card ${side}`}>
+        <span className="hs-ic" style={{ background: s.color + "1a", color: s.color }}><Icon name={s.icon} size={18} /></span>
+        <div><b>{s.name}</b><small>{s.sub}</small></div>
+        <i className="hs-dot" style={{ background: s.color }} />
       </div>
     </foreignObject>
   );
