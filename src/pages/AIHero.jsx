@@ -18,7 +18,7 @@ export default function AIHero({ total = 63, go = () => {}, queue = {} }) {
         <div className="hl-stats">
           <div><span className="hs-top"><b>{total}</b><em>↑ 12%</em></span><small>Văn bản/tháng</small></div>
           <div><span className="hs-top"><b>93%</b><em>↑ 2%</em></span><small>Chính xác AI</small></div>
-          <div><span className="hs-top"><b>26h</b><em>↓ 18%</em></span><small>Xử lý TB</small></div>
+          <div><span className="hs-top"><b>36h</b><em>↓ 18%</em></span><small>Xử lý TB</small></div>
         </div>
 
         <ul className="hl-feats">
