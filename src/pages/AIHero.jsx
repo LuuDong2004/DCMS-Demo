@@ -13,7 +13,7 @@ export default function AIHero({ total = 63, go = () => {}, queue = {} }) {
     <div className="ai-hero is-nova">
       <div className="ai-hero-left hl2">
         <h1>Hệ thống AI Điều phối và Quản{" "}lý Tài{" "}liệu Doanh{" "}nghiệp</h1>
-        <p>Tài liệu từ ERP, CRM, HRM, kế toán, email đổ về DCMS. AI phân tích và đề xuất, workflow điều phối phê duyệt, ký số, con người quyết định.</p>
+        <p>Tập trung tài liệu từ ERP, CRM, HRM, kế toán và email về một nền tảng duy nhất. AI tự động phân loại, trích xuất và đề xuất hướng xử lý; workflow điều phối phê duyệt, ký số và đồng bộ trạng thái. Quyết định cuối cùng luôn thuộc về người có thẩm quyền.</p>
 
         <div className="hl-stats">
           <div><span className="hs-top"><b>{total}</b><em>↑ 12%</em></span><small>Văn bản/tháng</small></div>
