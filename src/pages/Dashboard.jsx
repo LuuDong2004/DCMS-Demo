@@ -1,5 +1,4 @@
 import { Icon, Card } from "../ui";
-import AIHero from "./AIHero";
 import { Donut, WeeklyBars, DeptBars, AILine, BY_STATUS } from "./Charts";
 
 
@@ -9,10 +8,20 @@ export default function Dashboard({ docs, go }) {
   docs.forEach((d) => { counts[BUCKET[d.status] ?? 0] += 1; });
   const liveStatus = BY_STATUS.map((s, i) => ({ ...s, value: counts[i] }));
   const total = counts.reduce((a, b) => a + b, 0);
+  const waiting = docs.filter((d) => ["pending", "signing", "signed", "returned"].includes(d.status)).length;
   return (
     <div className="dash">
       <div className="dash-main">
-        <AIHero total={total} go={go} queue={docs.reduce((q, d) => ({ ...q, [d.status]: (q[d.status] || 0) + 1 }), {})} />
+        <div className="page-head">
+          <div>
+            <h1>Bảng điều khiển</h1>
+            <p className="muted">Tổng quan {total} văn bản đang lưu hành, tiến độ phê duyệt và hiệu suất xử lý.</p>
+          </div>
+          <div className="page-actions">
+            <button className="btn ghost" onClick={() => go("landing")}><Icon name="sparkles" size={16} />Giới thiệu hệ thống</button>
+            <button className="btn ghost" onClick={() => go("todo")}><Icon name="bell" size={16} />{waiting} việc cần xử lý</button>
+          </div>
+        </div>
 
         <div className="quick">
           <button className="q primary" onClick={() => go("create")}><Icon name="send" /><b>Tạo văn bản đi</b></button>
