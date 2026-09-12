@@ -5,67 +5,67 @@ const FILTERS = [
   ["all", "Tất cả"], ["pending", "Chờ phê duyệt"], ["signing", "Chờ ký số"], ["processing", "Đang xử lý"], ["signed", "Chờ phát hành"], ["returned", "Chờ chỉnh sửa"],
 ];
 
-function Step({ s, i, next, returned }) {
-  const lineDone = s.state === "done" && next && next.state !== "wait";
+const stats = (d) => {
+  const total = d.steps.length;
+  const done = d.steps.filter((s) => s.state === "done").length;
+  const idx = d.steps.findIndex((s) => s.state === "current");
+  return { total, done, pct: Math.round((done / total) * 100), cur: idx >= 0 ? d.steps[idx] : null, pos: idx + 1 };
+};
+
+function Segments({ d }) {
   return (
-    <div className={`wt-step ${s.state}`}>
-      {next && <i className={`wt-line ${lineDone ? "on" : s.state === "done" ? "half" : ""}`} />}
-      <span className="wt-node">
-        {s.state === "done" ? <Icon name="check" size={14} strokeWidth={2.6} /> : s.state === "rejected" ? <Icon name="x" size={14} strokeWidth={2.6} /> : i + 1}
-      </span>
-      <div className="wt-label">
-        <b>{s.name}</b>
-        <small>{s.who}</small>
-        {s.state === "current" ? <em className={`wt-now ${returned ? "ret" : ""}`}>{returned ? "Chờ chỉnh sửa" : "Đang xử lý"}</em> : s.time ? <small className="wt-time">{s.time}</small> : <small className="wt-time">—</small>}
-      </div>
+    <div className="wfg-seg" aria-hidden="true">
+      {d.steps.map((s, i) => <i key={i} className={s.state === "current" && d.returned ? "returned" : s.state} title={s.name} />)}
     </div>
   );
 }
 
-function FlowCard({ d, go, onRemind }) {
-  const [nudged, setNudged] = useState(false);
-  const total = d.steps.length;
-  const done = d.steps.filter((s) => s.state === "done").length;
-  const pct = Math.round((done / total) * 100);
-  const cur = d.steps.find((s) => s.state === "current");
-  const urgent = d.priority === "Cao";
-  return (
-    <article className="wt-card">
-      <header className="wt-head">
-        <div className="wt-title">
-          <div className="wt-top"><TypeTag type={d.type} /><span className="wt-id">{d.id}</span><Badge status={d.status} /></div>
-          <h3 onClick={() => go("doc", { id: d.id })}>{d.title}</h3>
-          <div className="wt-meta">
-            <span><Icon name="building" size={14} />{d.dept}</span>
-            <span><Icon name="plug" size={14} />Nguồn: {d.source}</span>
-            <span className={urgent ? "hot" : ""}><Icon name="clock" size={14} />Hạn {d.deadline}</span>
-            {d.amount && <span><Icon name="chart" size={14} />{d.amount}</span>}
-          </div>
-        </div>
-        <div className="wt-progress">
-          <div className="wt-progress-top"><span>Tiến độ</span><b>{pct}%</b></div>
-          <div className="wt-bar"><i style={{ width: pct + "%" }} /></div>
-          <small>{done}/{total} bước hoàn thành</small>
-        </div>
-      </header>
+const TYPE_TONE = { "Công văn đến": "#2a7bff", "Công văn đi": "#0f9488", "Hợp đồng": "#7c3aed", "Quyết định": "#d97706", "Báo cáo": "#16a34a", "Tờ trình": "#ea580c", "Kế hoạch": "#64748b" };
 
-      <div className="wt-steps" style={{ gridTemplateColumns: `repeat(${total}, minmax(110px, 1fr))` }}>
-        {d.steps.map((s, i) => <Step key={i} s={s} i={i} next={d.steps[i + 1]} returned={!!d.returned} />)}
+function MiniRing({ pct, tone }) {
+  const r = 15, c = 2 * Math.PI * r;
+  return (
+    <svg className="wt3-ring" viewBox="0 0 40 40" width="40" height="40" aria-label={`Tiến độ ${pct}%`}>
+      <circle cx="20" cy="20" r={r} className="wt2-ring-bg" strokeWidth="4" fill="none" />
+      <circle cx="20" cy="20" r={r} stroke={tone} strokeWidth="4" fill="none" strokeLinecap="round" strokeDasharray={`${(pct / 100) * c} ${c}`} transform="rotate(-90 20 20)" />
+      <text x="20" y="21" textAnchor="middle" dominantBaseline="middle" className="wt3-ring-t">{pct}</text>
+    </svg>
+  );
+}
+
+function Tile({ d, onOpen }) {
+  const { total, pct, cur, pos } = stats(d);
+  const urgent = d.priority === "Cao";
+  const tone = TYPE_TONE[d.type] || "#2a7bff";
+  const ringTone = d.returned ? "#f97316" : "url(#wt3Grad)";
+  return (
+    <button className="wfg-tile wt3" onClick={() => onOpen(d.id)} style={{ "--c": tone }}>
+      <div className="wt3-head">
+        <span className="wt3-ic"><Icon name="file" size={18} /></span>
+        <div className="wt3-title">
+          <h3 title={d.title}>{d.title}</h3>
+          <small>{d.type} · {d.id}</small>
+        </div>
+        <Badge status={d.status} />
       </div>
 
-      <footer className="wt-foot">
-        {cur ? (
-          <div className="wt-who">
-            <Avatar name={cur.who} size={30} />
-            <div><small>Đang chờ xử lý</small><b>{cur.who}</b> <span className="muted">· {cur.name}</span></div>
-          </div>
-        ) : <div className="wt-who muted">Không có bước đang chờ</div>}
-        <div className="wt-actions">
-          <button className="btn ghost sm" onClick={() => { setNudged(true); onRemind && onRemind(d.id); }} disabled={nudged}><Icon name="bell" size={14} />{nudged ? "Đã gửi nhắc" : "Nhắc việc"}</button>
-          <button className="btn primary sm" onClick={() => go("doc", { id: d.id })}>Xem chi tiết <Icon name="chevron" size={14} /></button>
+      <div className="wt3-now">
+        <MiniRing pct={pct} tone={ringTone} />
+        <div className="wt3-step">
+          <small>Bước {pos}/{total}</small>
+          <b title={cur?.name}>{cur?.name}</b>
         </div>
-      </footer>
-    </article>
+        <span className="wt3-who" title={cur?.who}><Avatar name={cur?.who || "?"} size={26} /><span>{cur?.who}</span></span>
+      </div>
+      <Segments d={d} />
+
+      <div className="wt3-meta"><Icon name="building" size={13} />{d.dept}</div>
+
+      <div className="wt3-foot">
+        <span className={`wt3-due ${urgent ? "hot" : ""}`}><Icon name="clock" size={13} />Hạn {d.deadline}</span>
+        <span className="wt3-go">Xem quy trình<Icon name="chevron" size={14} /></span>
+      </div>
+    </button>
   );
 }
 
@@ -84,7 +84,7 @@ export default function Workflow({ docs, go, onRemind }) {
   return (
     <div className="page">
       <div className="page-head">
-        <div><h1>Theo dõi quy trình</h1><p className="muted">Vị trí hiện tại của từng văn bản trong luồng phê duyệt và người đang giữ việc.</p></div>
+        <div><h1>Theo dõi quy trình</h1><p className="muted">Bấm vào từng văn bản để xem toàn bộ quy trình phê duyệt và người đang giữ việc.</p></div>
       </div>
 
       <div className="wt-kpis">
@@ -107,9 +107,10 @@ export default function Workflow({ docs, go, onRemind }) {
         <label className="search"><Icon name="search" size={16} /><input placeholder="Tìm văn bản, phòng ban…" value={q} onChange={(e) => setQ(e.target.value)} /></label>
       </div>
 
-      <div className="wt-list">
-        {list.length === 0 ? <div className="card empty"><Icon name="inbox" size={36} /><p>Không có văn bản phù hợp</p></div> : list.map((d) => <FlowCard key={d.id} d={d} go={go} onRemind={onRemind} />)}
-      </div>
+      {list.length === 0
+        ? <div className="card empty"><Icon name="inbox" size={36} /><p>Không có văn bản phù hợp</p></div>
+        : <div className="wfg"><svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true"><defs><linearGradient id="wt3Grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#3fd0ff" /><stop offset="100%" stopColor="#1846d6" /></linearGradient></defs></svg>{list.map((d) => <Tile key={d.id} d={d} onOpen={(id) => go("wf", { id })} />)}</div>}
+
     </div>
   );
 }
