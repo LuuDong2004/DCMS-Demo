@@ -15,10 +15,10 @@ export default function Dashboard({ docs, go }) {
         <AIHero total={total} go={go} queue={docs.reduce((q, d) => ({ ...q, [d.status]: (q[d.status] || 0) + 1 }), {})} />
 
         <div className="quick">
-          <button className="q primary" onClick={() => go("create")}><Icon name="send" /><div><b>Tạo văn bản đi</b><small>Soạn thảo và gửi văn bản mới</small></div></button>
-          <button className="q" onClick={() => go("create", { dir: "in" })}><Icon name="upload" /><div><b>Tạo văn bản đến</b><small>Tiếp nhận văn bản từ bên ngoài</small></div></button>
-          <button className="q" onClick={() => go("docs")}><Icon name="search" /><div><b>Tra cứu văn bản</b><small>Tìm kiếm nhanh văn bản</small></div></button>
-          <button className="q" onClick={() => go("workflow")}><Icon name="flow" /><div><b>Xem quy trình</b><small>Theo dõi trạng thái xử lý</small></div></button>
+          <button className="q primary" onClick={() => go("create")}><Icon name="send" /><b>Tạo văn bản đi</b></button>
+          <button className="q" onClick={() => go("create", { dir: "in" })}><Icon name="upload" /><b>Tạo văn bản đến</b></button>
+          <button className="q" onClick={() => go("docs")}><Icon name="search" /><b>Tra cứu văn bản</b></button>
+          <button className="q" onClick={() => go("workflow")}><Icon name="flow" /><b>Xem quy trình</b></button>
         </div>
 
         <div className="grid2">

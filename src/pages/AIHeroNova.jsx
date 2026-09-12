@@ -16,7 +16,7 @@ const STAGES = [
 
 const W = 900, H = 452;
 const CX = 450, CY = 156, R = 58;
-const CW = 196, CH = 58;
+const CW = 150, CH = 50;
 const LPOS = [[62, 14], [18, 127], [62, 240]];
 const TRACK_Y = 388, TRACK_X0 = 160, TRACK_X1 = 740;
 
@@ -43,7 +43,7 @@ function Glass({ x, y, s, side }) {
     <foreignObject x={x} y={y} width={CW} height={CH}>
       <div xmlns="http://www.w3.org/1999/xhtml" className={`nv-card ${side}`} style={{ "--c": s.color }}>
         <span className="nv-ic"><Icon name={s.icon} size={17} /></span>
-        <div><b>{s.name}</b><small>{s.sub}</small></div>
+        <b>{s.name}</b>
       </div>
     </foreignObject>
   );
