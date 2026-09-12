@@ -22,6 +22,18 @@ export default function App() {
   const parse = () => { const raw = location.hash ? location.hash.replace(/^#\/?/, "") : location.pathname.replace(/^\/+/, ""); const [p = "home", id] = decodeURIComponent(raw).split("/"); return { page: p || "home", params: id ? (p === "create" ? { dir: id } : { id }) : {} }; };
   const [route, setRoute] = useState(parse);
   useEffect(() => { if (location.hash) history.replaceState(null, "", "/" + location.hash.replace(/^#\/?/, "") + location.search); const h = () => setRoute(parse()); window.addEventListener("popstate", h); return () => window.removeEventListener("popstate", h); }, []);
+  const [theme, setTheme] = useState(() => { try { const t = localStorage.getItem("dcms-theme"); if (t) return t; } catch {} return window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; });
+  useEffect(() => { document.documentElement.dataset.theme = theme; try { localStorage.setItem("dcms-theme", theme); } catch {} }, [theme]);
+  const [ripple, setRipple] = useState(null);
+  const toggleTheme = (e) => {
+    const next = theme === "dark" ? "light" : "dark";
+    const r = e.currentTarget.getBoundingClientRect();
+    const x = r.left + r.width / 2, y = r.top + r.height / 2;
+    const end = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+    setRipple({ x, y, end, to: next, id: Date.now() });
+    setTheme(next);
+  };
+  useEffect(() => { if (!ripple) return; const t = setTimeout(() => setRipple(null), 800); return () => clearTimeout(t); }, [ripple]);
   const [docs, setDocs] = useState(DOCUMENTS);
   const [toast, setToast] = useState(null);
   const [collapsed, setCollapsed] = useState(false);
@@ -123,13 +135,15 @@ export default function App() {
         <header className="topbar">
           <button className="icon-btn burger" onClick={() => setMobileOpen(true)}><Icon name="menu" /></button>
           <button className="icon-btn desk" onClick={() => setCollapsed(!collapsed)} title="Thu gọn menu"><Icon name="panel" /></button>
-          <div className="topbar-title"><b>Hệ thống AI Điều phối và Phê duyệt Tài liệu Doanh nghiệp</b></div>
+
           <label className="search top"><Icon name="search" size={16} /><input placeholder="Tìm kiếm văn bản, số văn bản, người gửi, người xử lý…" /><kbd>/</kbd></label>
+          <button className="icon-btn theme-btn" onClick={toggleTheme} title={theme === "dark" ? "Chuyển sang giao diện sáng" : "Chuyển sang giao diện tối"} aria-label="Đổi giao diện"><span key={theme} className="theme-ic"><Icon name={theme === "dark" ? "sun" : "moon"} /></span></button>
           <button className="icon-btn bell"><Icon name="bell" /><i>3</i></button>
           <div className="me"><span className="me-avatar"><img src="/logo.png" alt="" /></span><div><b>{USER.name}</b><small>{USER.role}</small></div><Icon name="down" size={14} /></div>
         </header>
         <div className="content">{view()}</div>
       </div>
+      {ripple && <span key={ripple.id} className={`theme-ripple to-${ripple.to}`} style={{ left: ripple.x, top: ripple.y, "--r": `${ripple.end}px` }} />}
       {toast && <div className="toast"><Icon name="check" size={16} />{toast}</div>}
     </div>
   );

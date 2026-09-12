@@ -42,8 +42,8 @@ function ActiveShape(p) {
       <Sector cx={cx} cy={cy} innerRadius={innerRadius} outerRadius={outerRadius + 6} startAngle={startAngle} endAngle={endAngle} fill={fill} cornerRadius={6} />
       <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} strokeWidth={2} fill="none" />
       <circle cx={ex} cy={ey} r={3} fill={fill} />
-      <text x={ex + (cos >= 0 ? 1 : -1) * 8} y={ey} textAnchor={ta} dominantBaseline="middle" fontSize={13} fontWeight={700} fill="#1a3a6b">{payload.name}</text>
-      <text x={ex + (cos >= 0 ? 1 : -1) * 8} y={ey + 16} textAnchor={ta} fontSize={12} fill="#6b7788">{payload.value} văn bản · {(percent * 100).toFixed(0)}%</text>
+      <text x={ex + (cos >= 0 ? 1 : -1) * 8} y={ey} textAnchor={ta} dominantBaseline="middle" fontSize={13} fontWeight={700} fill="#1a3a6b" className="dn-v">{payload.name}</text>
+      <text x={ex + (cos >= 0 ? 1 : -1) * 8} y={ey + 16} textAnchor={ta} fontSize={12} fill="#6b7788" className="dn-l">{payload.value} văn bản · {(percent * 100).toFixed(0)}%</text>
     </g>
   );
 }
@@ -60,8 +60,8 @@ export function Donut({ data, unit = "văn bản", height = 260 }) {
             activeIndex={i} activeShape={ActiveShape} onMouseEnter={(_, idx) => setI(idx)} onMouseLeave={() => setI(null)} isAnimationActive={ANIM} animationDuration={700}>
             {data.map((d) => <Cell key={d.name} fill={d.color} />)}
           </Pie>
-          <text x="50%" y="47%" textAnchor="middle" fontSize={26} fontWeight={800} fill="#1a3a6b">{cur ? cur.value : total}</text>
-          <text x="50%" y="47%" dy={20} textAnchor="middle" fontSize={12} fill="#6b7788">{cur ? cur.name : unit}</text>
+          <text className="dn-v" x="50%" y="47%" textAnchor="middle" fontSize={26} fontWeight={800} fill="#1a3a6b">{cur ? cur.value : total}</text>
+          <text className="dn-l" x="50%" y="47%" dy={20} textAnchor="middle" fontSize={12} fill="#6b7788">{cur ? cur.name : unit}</text>
         </PieChart>
       </ResponsiveContainer>
       <ul className="legend">
