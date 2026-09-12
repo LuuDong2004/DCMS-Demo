@@ -7,6 +7,7 @@ import Documents from "./pages/Documents";
 import DocumentDetail from "./pages/DocumentDetail";
 import CreateDocument from "./pages/CreateDocument";
 import Workflow from "./pages/Workflow";
+import WorkflowDetail from "./pages/WorkflowDetail";
 import { AIAnalyze, AISuggest, AISummary } from "./pages/AIAgent";
 import { Users, Roles, WorkflowConfig, Logs, Integrations } from "./pages/Admin";
 import "./App.css";
@@ -151,6 +152,7 @@ export default function App() {
       case "doc": return <DocumentDetail doc={docs.find((d) => d.id === params.id)} go={go} onAction={onAction} />;
       case "create": return <CreateDocument go={go} onCreate={onCreate} dir={params.dir || "out"} />;
       case "workflow": return <Workflow docs={docs} go={go} onRemind={onRemind} />;
+      case "wf": return <WorkflowDetail doc={docs.find((d) => d.id === params.id)} go={go} onRemind={onRemind} />;
       case "ai": return <AIAnalyze docs={docs} go={go} />;
       case "ai-suggest": return <AISuggest docs={docs} go={go} />;
       case "ai-summary": return <AISummary docs={docs} go={go} />;
@@ -163,7 +165,7 @@ export default function App() {
     }
   };
 
-  const activeId = page === "doc" ? "docs" : page;
+  const activeId = page === "doc" ? "docs" : page === "wf" ? "workflow" : page;
   const submitSearch = (e) => { e.preventDefault(); setSearch((s) => ({ q: query.trim(), n: s.n + 1 })); go("docs"); };
 
   return (

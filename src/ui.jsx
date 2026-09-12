@@ -1,11 +1,11 @@
 import { STATUS } from "./mock";
 
 import {
-  Home, Inbox, Send, FileText, Clock, Check, Plus, Bot, Lightbulb, AlignLeft, Users, ShieldCheck, GitBranch, ScrollText, Plug, Search, Bell, PenLine, Upload, Eye, X, ArrowLeft, File, ChevronDown, BarChart3, AlertTriangle, MoreHorizontal, Filter, LayoutGrid, ChevronRight, RefreshCw, Menu, PanelLeft, Download, Sparkles, CheckCircle2, Building2, Mail, Database, Sun, Moon,
+  Home, Inbox, Send, FileText, Clock, Check, Plus, Bot, Lightbulb, AlignLeft, Users, ShieldCheck, GitBranch, ScrollText, Plug, Search, Bell, PenLine, Upload, Eye, X, ArrowLeft, File, ChevronDown, BarChart3, AlertTriangle, MoreHorizontal, Filter, LayoutGrid, ChevronRight, RefreshCw, Menu, PanelLeft, Download, Sparkles, CheckCircle2, Building2, Mail, Database, Sun, Moon, Minus, Maximize2, Move, ScanSearch,
 } from "lucide-react";
 
 const ICONS = {
-  home: Home, inbox: Inbox, send: Send, docs: FileText, clock: Clock, check: Check, plus: Plus, ai: Bot, bulb: Lightbulb, summary: AlignLeft, users: Users, shield: ShieldCheck, flow: GitBranch, log: ScrollText, plug: Plug, search: Search, bell: Bell, sign: PenLine, upload: Upload, eye: Eye, x: X, back: ArrowLeft, file: File, down: ChevronDown, chart: BarChart3, warn: AlertTriangle, more: MoreHorizontal, filter: Filter, grid: LayoutGrid, chevron: ChevronRight, refresh: RefreshCw, menu: Menu, panel: PanelLeft, download: Download, sparkles: Sparkles, done: CheckCircle2, building: Building2, mail: Mail, db: Database, sun: Sun, moon: Moon,
+  home: Home, inbox: Inbox, send: Send, docs: FileText, clock: Clock, check: Check, plus: Plus, ai: Bot, bulb: Lightbulb, summary: AlignLeft, users: Users, shield: ShieldCheck, flow: GitBranch, log: ScrollText, plug: Plug, search: Search, bell: Bell, sign: PenLine, upload: Upload, eye: Eye, x: X, back: ArrowLeft, file: File, down: ChevronDown, chart: BarChart3, warn: AlertTriangle, more: MoreHorizontal, filter: Filter, grid: LayoutGrid, chevron: ChevronRight, refresh: RefreshCw, menu: Menu, panel: PanelLeft, download: Download, sparkles: Sparkles, done: CheckCircle2, building: Building2, mail: Mail, db: Database, sun: Sun, moon: Moon, minus: Minus, fit: Maximize2, move: Move, zoomreset: ScanSearch,
 };
 
 export function Icon({ name, size = 18, className = "", strokeWidth = 1.9 }) {
