@@ -1,63 +1,72 @@
 import { Icon } from "../ui";
 
 const LEFT = [
-  { name: "ERP", sub: "Đơn hàng, mua sắm", icon: "db", color: "#1f5fbf", doc: "Đề nghị mua sắm" },
-  { name: "CRM", sub: "Khách hàng, hợp đồng", icon: "users", color: "#12b5a5", doc: "Hợp đồng" },
-  { name: "HRM", sub: "Nhân sự, quyết định", icon: "building", color: "#f2a33a", doc: "Quyết định" },
+  { name: "ERP", sub: "Đơn hàng, mua sắm", icon: "db", color: "#2a7bff", count: 128 },
+  { name: "CRM", sub: "Khách hàng, hợp đồng", icon: "users", color: "#12b5a5", count: 64 },
+  { name: "HRM", sub: "Nhân sự, quyết định", icon: "building", color: "#f2a33a", count: 41 },
 ];
 const RIGHT = [
-  { name: "Kế toán", sub: "Thanh toán, chứng từ", icon: "chart", color: "#8b5cf6", doc: "Thanh toán" },
-  { name: "Email", sub: "Công văn đến", icon: "mail", color: "#e05252", doc: "Công văn" },
-  { name: "Người dùng", sub: "Soạn thảo, upload", icon: "upload", color: "#1a7d43", doc: "Tờ trình" },
+  { name: "Kế toán", sub: "Thanh toán, chứng từ", icon: "chart", color: "#8b5cf6", count: 87 },
+  { name: "Email", sub: "Công văn đến", icon: "mail", color: "#e05252", count: 212 },
+  { name: "Người dùng", sub: "Soạn thảo, upload", icon: "upload", color: "#1a9a55", count: 36 },
 ];
 const STAGES = [
   { label: "Phân tích", icon: "search" }, { label: "Đề xuất", icon: "bulb" }, { label: "Phê duyệt", icon: "check" }, { label: "Ký số", icon: "sign" }, { label: "Đồng bộ", icon: "refresh" },
 ];
 
-const W = 900, H = 440, CX = 450, CY = 180, R = 66;
-const CARD_W = 208, CARD_H = 64, GAP = 26;
-const ys = [30, 30 + CARD_H + GAP, 30 + 2 * (CARD_H + GAP)];
+const W = 900, H = 430;
+const CX = 450, CY = 150, R = 60;
+const CARD_W = 236, CARD_H = 62, GAP = 22, CARD_X = 6;
+const ys = [CY - CARD_H / 2 - (CARD_H + GAP), CY - CARD_H / 2, CY - CARD_H / 2 + (CARD_H + GAP)];
+const ANG = [-32, 0, 32];
+const TRACK_Y = 360, TRACK_X0 = 160, TRACK_X1 = 740;
 
+const rad = (d) => (d * Math.PI) / 180;
+function entry(side, i) {
+  const a = rad(ANG[i]);
+  const r = R + 10;
+  return side === "l" ? [CX - r * Math.cos(a), CY + r * Math.sin(a)] : [CX + r * Math.cos(a), CY + r * Math.sin(a)];
+}
 function curve(x1, y1, x2, y2) {
-  const dx = (x2 - x1) * 0.55;
+  const dx = (x2 - x1) * 0.5;
   return `M${x1},${y1} C${x1 + dx},${y1} ${x2 - dx},${y2} ${x2},${y2}`;
+}
+
+function Packet({ path, color, label, delay, dur = 4.2 }) {
+  const w = Math.round(label.length * 7 + 34);
+  return (
+    <g opacity="0">
+      <animateMotion dur={`${dur}s`} begin={`${delay}s`} repeatCount="indefinite" path={path} calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".4 0 .25 1" />
+      <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.1;.62;.78;1" dur={`${dur}s`} begin={`${delay}s`} repeatCount="indefinite" />
+      <rect x={-w / 2} y={-11.5} width={w} height={23} rx={11.5} fill="#fff" stroke={color} strokeOpacity=".45" filter="url(#pshadow)" />
+      <path d={`M${-w / 2 + 10},-5.5 h5 l3,3 v8 h-8z`} fill={color} fillOpacity=".14" stroke={color} strokeWidth="1.3" strokeLinejoin="round" />
+      <text x={-w / 2 + 24} y={0.5} dominantBaseline="middle" fontSize="11.5" fontWeight="700" fill={color} fontFamily="Inter, Segoe UI, sans-serif">{label}</text>
+    </g>
+  );
 }
 
 function SysCard({ x, y, s, side }) {
   return (
     <foreignObject x={x} y={y} width={CARD_W} height={CARD_H}>
-      <div xmlns="http://www.w3.org/1999/xhtml" className={`hs-card ${side}`}>
-        <span className="hs-ic" style={{ background: s.color + "1a", color: s.color }}><Icon name={s.icon} size={18} /></span>
-        <div><b>{s.name}</b><small>{s.sub}</small></div>
-        <i className="hs-dot" style={{ background: s.color }} />
+      <div xmlns="http://www.w3.org/1999/xhtml" className={`hx-card ${side}`} style={{ "--c": s.color }}>
+        <span className="hx-ic"><Icon name={s.icon} size={18} /></span>
+        <div className="hx-txt"><b>{s.name}</b><small>{s.sub}</small></div>
+        <span className="hx-count">{s.count}</span>
+        <i className="hx-port" />
       </div>
     </foreignObject>
   );
 }
 
-function Packet({ path, color, label, doc, delay, dur = 3.4 }) {
-  const w = Math.round(label.length * 7.2 + 36);
-  const motion = { dur: `${dur}s`, repeatCount: "indefinite", begin: `${delay}s`, calcMode: "spline", keyPoints: "0;1", keyTimes: "0;1", keySplines: ".45 0 .2 1" };
-  return (
-    <g className="packet" opacity="0">
-      <animateMotion {...motion} path={path} />
-      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.12;.8;1" dur={`${dur}s`} begin={`${delay}s`} repeatCount="indefinite" />
-      <rect x={-w / 2} y={-12} width={w} height={24} rx={12} fill="#fff" stroke={color} strokeOpacity=".55" filter="url(#pshadow)" />
-      <path d={`M${-w / 2 + 9},-5 h5 l3,3 v7 h-8z`} fill="none" stroke={color} strokeWidth="1.4" strokeLinejoin="round" />
-      <text x={-w / 2 + 23} y={0.5} dominantBaseline="middle" fontSize="11.5" fontWeight="700" fill={color} fontFamily="Inter, Segoe UI, sans-serif">{label}</text>
-    </g>
-  );
-}
-
 export default function AIHero() {
-  const paths = [
-    ...LEFT.map((s, i) => ({ d: curve(16 + CARD_W, ys[i] + CARD_H / 2, CX - R - 8, CY), color: s.color, label: s.name, doc: s.doc, delay: i * 1.1 })),
-    ...RIGHT.map((s, i) => ({ d: curve(W - 16 - CARD_W, ys[i] + CARD_H / 2, CX + R + 8, CY), color: s.color, label: s.name, doc: s.doc, delay: i * 1.1 + 0.55 })),
+  const flows = [
+    ...LEFT.map((s, i) => { const [ex, ey] = entry("l", i); return { s, d: curve(CARD_X + CARD_W + 4, ys[i] + CARD_H / 2, ex, ey), ex, ey }; }),
+    ...RIGHT.map((s, i) => { const [ex, ey] = entry("r", i); return { s, d: curve(W - CARD_X - CARD_W - 4, ys[i] + CARD_H / 2, ex, ey), ex, ey }; }),
   ];
-  const stageY = H - 40; const stageW = 132; const stageGap = 14;
-  const stageX0 = CX - (STAGES.length * stageW + (STAGES.length - 1) * stageGap) / 2;
-  const down = `M${CX},${CY + R + 4} L${CX},${stageY - 18}`;
-  const stageLine = `M${stageX0 + 10},${stageY} L${stageX0 + STAGES.length * (stageW + stageGap) - stageGap - 10},${stageY}`;
+  const order = [0, 3, 1, 4, 2, 5];
+  const down = `M${CX},${CY + R + 10} L${CX},${TRACK_Y - 24}`;
+  const track = `M${TRACK_X0},${TRACK_Y} L${TRACK_X1},${TRACK_Y}`;
+  const step = (TRACK_X1 - TRACK_X0) / (STAGES.length - 1);
 
   return (
     <div className="ai-hero">
@@ -76,54 +85,65 @@ export default function AIHero() {
           <span><Icon name="done" size={15} />Minh bạch, có audit</span>
         </div>
       </div>
+
       <svg className="ai-scene" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet">
         <defs>
-          <linearGradient id="orb" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#3fd0ff" /><stop offset="55%" stopColor="#2a7bff" /><stop offset="100%" stopColor="#1846d6" /></linearGradient>
-          <radialGradient id="glow" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#3fb8ff" stopOpacity=".35" /><stop offset="100%" stopColor="#2d7bff" stopOpacity="0" /></radialGradient>
-          <linearGradient id="stageLine" x1="0" x2="1"><stop offset="0%" stopColor="#1f5fbf" /><stop offset="100%" stopColor="#12b5a5" /></linearGradient>
-          <filter id="soft"><feGaussianBlur stdDeviation="1.2" /></filter>
-          <filter id="pshadow" x="-20%" y="-50%" width="140%" height="200%"><feDropShadow dx="0" dy="3" stdDeviation="3" floodColor="#1a3a6b" floodOpacity=".15" /></filter>
+          <linearGradient id="hxOrb" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#3fd0ff" /><stop offset="55%" stopColor="#2a7bff" /><stop offset="100%" stopColor="#1846d6" /></linearGradient>
+          <radialGradient id="hxGlow" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#3fb8ff" stopOpacity=".32" /><stop offset="100%" stopColor="#3fb8ff" stopOpacity="0" /></radialGradient>
+          <linearGradient id="hxTrack" x1="0" x2="1"><stop offset="0%" stopColor="#3fd0ff" /><stop offset="100%" stopColor="#1846d6" /></linearGradient>
+          <linearGradient id="hxBeam" x1="0" x2="1"><stop offset="0%" stopColor="#3fd0ff" stopOpacity="0" /><stop offset="50%" stopColor="#2a7bff" /><stop offset="100%" stopColor="#3fd0ff" stopOpacity="0" /></linearGradient>
+          <filter id="pshadow" x="-20%" y="-50%" width="140%" height="200%"><feDropShadow dx="0" dy="3" stdDeviation="3" floodColor="#1a3a6b" floodOpacity=".14" /></filter>
+          <pattern id="hxDots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#1f5fbf" opacity=".10" /></pattern>
         </defs>
+        <rect width={W} height={H} fill="url(#hxDots)" />
 
-        {/* grid dots background */}
-        <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#1f5fbf" opacity=".12" /></pattern>
-        <rect width={W} height={H} fill="url(#dots)" />
-
-        {/* connection paths */}
-        {paths.map((p, i) => (
-          <g key={i}>
-            <path d={p.d} fill="none" stroke={p.color} strokeWidth="2" strokeOpacity=".22" />
-            <path d={p.d} fill="none" stroke={p.color} strokeWidth="2" strokeDasharray="6 10" strokeOpacity=".5" className="flow-dash" />
-            <Packet path={p.d} color={p.color} label={p.label} doc={p.doc} delay={p.delay} />
+        {/* flows */}
+        {flows.map((f, i) => (
+          <g key={f.s.name}>
+            <path d={f.d} fill="none" stroke={f.s.color} strokeWidth="2" strokeOpacity=".16" />
+            <path d={f.d} fill="none" stroke={f.s.color} strokeWidth="2" strokeOpacity=".55" strokeDasharray="2 9" strokeLinecap="round" className="hx-dash" />
+            <circle cx={f.ex} cy={f.ey} r="4" fill="#fff" stroke={f.s.color} strokeWidth="2" />
           </g>
         ))}
 
         {/* orb */}
-        <circle cx={CX} cy={CY} r={R + 80} fill="url(#glow)" />
-        <circle cx={CX} cy={CY} r={R + 34} fill="none" stroke="#1f5fbf" strokeOpacity=".25" strokeWidth="1.5" strokeDasharray="4 8" className="ring ring-a" />
-        <circle cx={CX} cy={CY} r={R + 17} fill="none" stroke="#12b5a5" strokeOpacity=".35" strokeWidth="1.5" strokeDasharray="30 14" className="ring ring-b" />
-        <circle cx={CX} cy={CY} r={R} fill="url(#orb)" className="orb" />
-        <circle cx={CX} cy={CY} r={R} fill="none" stroke="#fff" strokeOpacity=".5" strokeWidth="2" />
-        <text x={CX} y={CY} dominantBaseline="middle" textAnchor="middle" fontSize="28" fontWeight="800" fill="#fff" letterSpacing="1" fontFamily="Inter, Segoe UI, sans-serif">DCMS</text>
-        
+        <circle cx={CX} cy={CY} r={R + 86} fill="url(#hxGlow)" />
+        <circle cx={CX} cy={CY} r={R + 10} fill="none" stroke="#2a7bff" strokeOpacity=".18" strokeWidth="1.5" />
+        <g className="hx-orbit">
+          <circle cx={CX} cy={CY} r={R + 26} fill="none" stroke="#2a7bff" strokeOpacity=".16" strokeWidth="1.2" strokeDasharray="3 7" />
+          <circle cx={CX + R + 26} cy={CY} r="4" fill="#3fd0ff" />
+          <circle cx={CX - R - 26} cy={CY} r="3" fill="#8b5cf6" />
+          <circle cx={CX} cy={CY - R - 26} r="2.5" fill="#12b5a5" />
+        </g>
+        <circle cx={CX} cy={CY} r={R} fill="url(#hxOrb)" className="hx-core" />
+        <circle cx={CX} cy={CY} r={R - 1} fill="none" stroke="#fff" strokeOpacity=".45" strokeWidth="2" />
+        <text x={CX} y={CY + 1} dominantBaseline="middle" textAnchor="middle" fontSize="25" fontWeight="800" letterSpacing="1" fill="#fff" fontFamily="Inter, Segoe UI, sans-serif">DCMS</text>
 
-        {/* down flow to stages */}
-        <path d={down} stroke="#1f5fbf" strokeWidth="2" strokeOpacity=".3" strokeDasharray="5 7" className="flow-dash" />
-        <Packet path={down} color="#2a7bff" label="Đã phân loại" doc="" delay={0.3} dur={2.4} />
-        <path d={stageLine} stroke="url(#stageLine)" strokeWidth="2" strokeOpacity=".35" />
-        <circle r="4" fill="#12b5a5"><animateMotion dur="3.2s" repeatCount="indefinite" path={stageLine} /></circle>
-        {STAGES.map((s, i) => {
-          const x = stageX0 + i * (stageW + stageGap);
+        {/* output pipeline */}
+        <path d={down} stroke="#2a7bff" strokeWidth="2" strokeOpacity=".35" strokeDasharray="2 7" strokeLinecap="round" className="hx-dash" />
+        <circle r="4" fill="#2a7bff"><animateMotion dur="1.8s" repeatCount="indefinite" path={down} /></circle>
+        <path d={track} stroke="#e1e9f5" strokeWidth="6" strokeLinecap="round" />
+        <path d={track} stroke="url(#hxTrack)" strokeWidth="6" strokeLinecap="round" strokeOpacity=".35" />
+        <rect x={TRACK_X0 - 60} y={TRACK_Y - 3} width="120" height="6" rx="3" fill="url(#hxBeam)">
+          <animate attributeName="x" from={TRACK_X0 - 60} to={TRACK_X1 - 60} dur="4s" repeatCount="indefinite" />
+        </rect>
+        {STAGES.map((st, i) => {
+          const x = TRACK_X0 + i * step;
           return (
-            <foreignObject key={s.label} x={x} y={stageY - 17} width={stageW} height={34}>
-              <div xmlns="http://www.w3.org/1999/xhtml" className="hs-stage" style={{ animationDelay: `${i * 0.5}s` }}><Icon name={s.icon} size={14} />{s.label}</div>
+            <foreignObject key={st.label} x={x - 60} y={TRACK_Y - 20} width="120" height="70">
+              <div xmlns="http://www.w3.org/1999/xhtml" className="hx-stage" style={{ animationDelay: `${i * 0.8}s` }}>
+                <span className="hx-node" style={{ animationDelay: `${i * 0.8}s` }}><Icon name={st.icon} size={16} /></span>
+                <b>{st.label}</b>
+              </div>
             </foreignObject>
           );
         })}
 
-        {/* cards */}
-        {LEFT.map((s, i) => <SysCard key={s.name} x={16} y={ys[i]} s={s} side="l" />)}
-        {RIGHT.map((s, i) => <SysCard key={s.name} x={W - 16 - CARD_W} y={ys[i]} s={s} side="r" />)}
+        {/* packets on top of paths, below cards */}
+        {order.map((idx, k) => <Packet key={idx} path={flows[idx].d} color={flows[idx].s.color} label={flows[idx].s.name} delay={k * 0.7} />)}
+
+        {LEFT.map((s, i) => <SysCard key={s.name} x={CARD_X} y={ys[i]} s={s} side="l" />)}
+        {RIGHT.map((s, i) => <SysCard key={s.name} x={W - CARD_X - CARD_W} y={ys[i]} s={s} side="r" />)}
       </svg>
     </div>
   );
