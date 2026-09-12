@@ -58,7 +58,7 @@ function useReveal(dep) {
   return ref;
 }
 
-export default function Landing({ go, theme, onToggleTheme }) {
+export default function Landing({ go, theme, onToggleTheme, user }) {
   const [lang, setLang] = useState(() => {
     try { return localStorage.getItem("dcms-lang") === "en" ? "en" : "vi"; } catch { return "vi"; }
   });
@@ -77,7 +77,7 @@ export default function Landing({ go, theme, onToggleTheme }) {
     return () => window.removeEventListener("scroll", s);
   }, []);
   const jump = (id) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-  const demo = () => go("home");
+  const demo = () => go(user ? "home" : "login");
 
   return (
     <div className="lp" ref={root}>

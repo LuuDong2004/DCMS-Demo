@@ -257,3 +257,6 @@ html[data-theme="dark"] .lp-fx-item h3 { color: var(--blue); }
 .lp-lang i { width: 1px; height: 13px; background: var(--line-2); }
 html[data-theme="dark"] .lp-lang b.on { color: var(--blue); }
 @media (max-width: 560px) { .lp-lang { display: none; } }
+
+/* header dính 66px: chừa chỗ khi nhảy tới khối */
+.lp section[id] { scroll-margin-top: 84px; }
