@@ -51,7 +51,7 @@ function FeatureIndex({ t }) {
 function useReveal(dep) {
   const ref = useRef(null);
   useEffect(() => {
-    const io = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting && e.target.classList.add("in")), { threshold: 0.12 });
+    const io = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting && e.target.classList.add("in")), { threshold: 0.06 });
     ref.current?.querySelectorAll(".rv").forEach((el) => io.observe(el));
     return () => io.disconnect();
   }, [dep]);
@@ -139,7 +139,7 @@ export default function Landing({ go, theme, onToggleTheme }) {
           </div>
           <div className="lp-grid3">
             {t.pains.map(([title, desc], i) => (
-              <div className="lp-pain rv" key={title} style={{ "--d": `${i * 70}ms` }}>
+              <div className="lp-pain rv" key={title} style={{ "--d": `${i * 140}ms` }}>
                 <span className="lp-pain-ic"><Icon name="warn" size={18} /></span>
                 <h3>{title}</h3><p>{desc}</p>
               </div>
@@ -169,7 +169,7 @@ export default function Landing({ go, theme, onToggleTheme }) {
           <LandingFlow t={t} />
           <ol className="lp-steps lp-steps-sm">
             {t.steps.map(([title, desc], i) => (
-              <li className="rv" key={title} style={{ "--d": `${i * 80}ms` }}>
+              <li className="rv" key={title} style={{ "--d": `${i * 150}ms` }}>
                 <span className="lp-step-n"><Icon name={ICONS.steps[i]} size={18} /><em>{i + 1}</em></span>
                 <div><h3>{title}</h3><p>{desc}</p></div>
               </li>
@@ -211,7 +211,7 @@ export default function Landing({ go, theme, onToggleTheme }) {
           </div>
           <div className="lp-grid2">
             {t.benefits.map(([title, desc], i) => (
-              <div className="lp-ben rv" key={title} style={{ "--d": `${(i % 2) * 70}ms` }}>
+              <div className="lp-ben rv" key={title} style={{ "--d": `${(i % 2) * 140}ms` }}>
                 <h3><Icon name="done" size={17} />{title}</h3><p>{desc}</p>
               </div>
             ))}
