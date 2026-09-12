@@ -1,14 +1,14 @@
 import { Icon } from "../ui";
 
 const LEFT = [
-  { name: "ERP", sub: "Đơn hàng, mua sắm", icon: "db", color: "#4da3ff" },
-  { name: "CRM", sub: "Khách hàng, hợp đồng", icon: "users", color: "#2ee6c8" },
-  { name: "HRM", sub: "Nhân sự, quyết định", icon: "building", color: "#ffb547" },
+  { name: "ERP", sub: "Đơn hàng, mua sắm", icon: "db", color: "#2a7bff" },
+  { name: "CRM", sub: "Khách hàng, hợp đồng", icon: "users", color: "#0ea5a0" },
+  { name: "HRM", sub: "Nhân sự, quyết định", icon: "building", color: "#f59e0b" },
 ];
 const RIGHT = [
-  { name: "Kế toán", sub: "Thanh toán, chứng từ", icon: "chart", color: "#a98bff" },
-  { name: "Email", sub: "Công văn đến", icon: "mail", color: "#ff6b7a" },
-  { name: "Người dùng", sub: "Soạn thảo, upload", icon: "upload", color: "#3ddc84" },
+  { name: "Kế toán", sub: "Thanh toán, chứng từ", icon: "chart", color: "#8b5cf6" },
+  { name: "Email", sub: "Công văn đến", icon: "mail", color: "#ef4444" },
+  { name: "Người dùng", sub: "Soạn thảo, upload", icon: "upload", color: "#16a34a" },
 ];
 const STAGES = [
   { label: "Phân tích", icon: "search" }, { label: "Đề xuất", icon: "bulb" }, { label: "Phê duyệt", icon: "check" }, { label: "Ký số", icon: "sign" }, { label: "Đồng bộ", icon: "refresh" },
