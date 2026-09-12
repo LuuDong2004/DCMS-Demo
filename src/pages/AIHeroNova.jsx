@@ -44,7 +44,6 @@ function Glass({ x, y, s, side }) {
       <div xmlns="http://www.w3.org/1999/xhtml" className={`nv-card ${side}`} style={{ "--c": s.color }}>
         <span className="nv-ic"><Icon name={s.icon} size={17} /></span>
         <div><b>{s.name}</b><small>{s.sub}</small></div>
-        <i className="nv-port" />
       </div>
     </foreignObject>
   );
@@ -71,6 +70,9 @@ export default function AIHeroNova() {
           <radialGradient id="nvHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#3fb8ff" stopOpacity=".45" /><stop offset="100%" stopColor="#3fb8ff" stopOpacity="0" /></radialGradient>
           <linearGradient id="nvHi" x1="0" x2="1"><stop offset="0%" stopColor="#3fd0ff" /><stop offset="100%" stopColor="#2a6bff" /></linearGradient>
           <linearGradient id="nvBeam" x1="0" x2="1"><stop offset="0%" stopColor="#3fd0ff" stopOpacity="0" /><stop offset="50%" stopColor="#2a7bff" /><stop offset="100%" stopColor="#3fd0ff" stopOpacity="0" /></linearGradient>
+          <linearGradient id="nvRing" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#3fd0ff" /><stop offset="55%" stopColor="#2a7bff" /><stop offset="100%" stopColor="#8b5cf6" /></linearGradient>
+          <radialGradient id="nvTint" cx="50%" cy="40%" r="60%"><stop offset="0%" stopColor="#3fb8ff" stopOpacity=".16" /><stop offset="100%" stopColor="#3fb8ff" stopOpacity="0" /></radialGradient>
+          <filter id="nvCoreSh" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="8" stdDeviation="10" floodColor="#2a7bff" floodOpacity=".28" /></filter>
           <filter id="nvCard" x="-10%" y="-40%" width="120%" height="180%"><feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#1a3a6b" floodOpacity=".08" /></filter>
           <filter id="nvGlow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.5" /></filter>
           <filter id="nvGlowS" x="-30%" y="-80%" width="160%" height="260%"><feDropShadow dx="0" dy="0" stdDeviation="3" floodColor="#3fb8ff" floodOpacity=".45" /></filter>
@@ -107,9 +109,11 @@ export default function AIHeroNova() {
         <circle cx={CX} cy={CY} r={R + 16} fill="none" stroke="#3fd0ff" strokeOpacity=".35" strokeWidth="1.2" strokeDasharray="2 6" className="nv-spin" />
         <circle className="nv-root" cx={lx} cy={CY} r="4.5" fill="#fff" stroke="#2a7bff" strokeWidth="2" />
         <circle className="nv-root" cx={rx} cy={CY} r="4.5" fill="#fff" stroke="#2a7bff" strokeWidth="2" />
-        <circle cx={CX} cy={CY} r={R} fill="url(#nvOrb)" className="nv-core" />
-        <circle cx={CX} cy={CY} r={R - 1} fill="none" stroke="#fff" strokeOpacity=".55" strokeWidth="2" />
-        <text x={CX} y={CY + 1} dominantBaseline="middle" textAnchor="middle" fontSize="24" fontWeight="800" letterSpacing="1" fill="#fff" fontFamily="Inter, Segoe UI, sans-serif">DCMS</text>
+        <circle cx={CX} cy={CY} r={R + 8} fill="none" stroke="url(#nvRing)" strokeWidth="3" strokeLinecap="round" strokeDasharray={`${(R + 8) * 2 * Math.PI * 0.68} ${(R + 8) * 2 * Math.PI * 0.32}`} className="nv-ring-spin" />
+        <circle cx={CX} cy={CY} r={R} className="nv-disc" filter="url(#nvCoreSh)" />
+        <circle cx={CX} cy={CY} r={R - 8} fill="url(#nvTint)" />
+        <image href="/logo.png" x={CX - 22} y={CY - 32} width="44" height="44" />
+        <text x={CX} y={CY + 27} textAnchor="middle" fontSize="12.5" fontWeight="800" letterSpacing="2.4" className="dn-v" fill="#1a3a6b" fontFamily="Inter, Segoe UI, sans-serif">DCMS</text>
 
         {/* down link */}
         <path d={down} stroke="#2a7bff" strokeWidth="2" strokeOpacity=".45" strokeDasharray="1 9" strokeLinecap="round" className="nv-dash" />
