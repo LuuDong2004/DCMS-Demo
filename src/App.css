@@ -485,3 +485,14 @@ h4.sub { font-size: 13px; color: var(--muted); margin: 14px 0 6px; text-transfor
 /* hide scrollbars (still scrollable) */
 html, body, .sidebar nav { scrollbar-width: none; -ms-overflow-style: none; }
 html::-webkit-scrollbar, body::-webkit-scrollbar, .sidebar nav::-webkit-scrollbar { display: none; width: 0; height: 0; }
+
+/* brand smaller + wider sidebar */
+.brand .brand-name { font-size: 24px; line-height: 22px; height: 22px; margin-top: 1px; letter-spacing: .2px; }
+:root { --side: 276px; }
+.sidebar nav { padding: 12px 14px; }
+.sidebar nav button { font-size: 14.5px; padding: 10px 14px; gap: 12px; }
+.nav-title { font-size: 11.5px; padding: 12px 14px 5px; }
+.brand { padding: 14px 22px; }
+.sys-status { padding: 14px 22px; }
+@media (max-width: 1280px) { :root { --side: 68px; } }
+@media (max-width: 768px) { :root { --side: 276px; } }

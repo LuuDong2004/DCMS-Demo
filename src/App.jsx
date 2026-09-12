@@ -96,7 +96,7 @@ export default function App() {
     <div className={`app ${collapsed ? "collapsed" : ""}`}>
       <aside className={`sidebar ${mobileOpen ? "open" : ""}`}>
         <div className="brand" onClick={() => go("home")}>
-          <Logo size={26} />
+          <Logo size={22} />
           {!collapsed && <b className="brand-name">CMS</b>}
         </div>
         <nav>
