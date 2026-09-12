@@ -26,7 +26,7 @@ const DEPT = [
   { d: "Kinh doanh", pending: 6, done: 14 }, { d: "Pháp chế", pending: 4, done: 9 }, { d: "Tài chính", pending: 5, done: 11 }, { d: "HCNS", pending: 2, done: 8 }, { d: "IT", pending: 3, done: 5 }, { d: "Đào tạo", pending: 2, done: 3 },
 ];
 const AI = [
-  { m: "T12", acc: 82 }, { m: "T1", acc: 85 }, { m: "T2", acc: 87 }, { m: "T3", acc: 89 }, { m: "T4", acc: 91 }, { m: "T5", acc: 93 },
+  { m: "T4", acc: 82 }, { m: "T5", acc: 85 }, { m: "T6", acc: 87 }, { m: "T7", acc: 89 }, { m: "T8", acc: 91 }, { m: "T9", acc: 93 },
 ];
 
 const tipStyle = { borderRadius: 10, border: "1px solid #e3e9f2", boxShadow: "0 8px 24px rgba(26,58,107,.12)", fontSize: 13 };

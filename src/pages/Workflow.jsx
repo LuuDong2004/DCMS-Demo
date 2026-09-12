@@ -2,10 +2,10 @@ import { useState } from "react";
 import { Icon, Badge, TypeTag, Avatar } from "../ui";
 
 const FILTERS = [
-  ["all", "Tất cả"], ["pending", "Chờ phê duyệt"], ["signing", "Chờ ký số"], ["processing", "Đang xử lý"], ["signed", "Chờ phát hành"],
+  ["all", "Tất cả"], ["pending", "Chờ phê duyệt"], ["signing", "Chờ ký số"], ["processing", "Đang xử lý"], ["signed", "Chờ phát hành"], ["returned", "Chờ chỉnh sửa"],
 ];
 
-function Step({ s, i, next }) {
+function Step({ s, i, next, returned }) {
   const lineDone = s.state === "done" && next && next.state !== "wait";
   return (
     <div className={`wt-step ${s.state}`}>
@@ -16,13 +16,13 @@ function Step({ s, i, next }) {
       <div className="wt-label">
         <b>{s.name}</b>
         <small>{s.who}</small>
-        {s.state === "current" ? <em className="wt-now">Đang xử lý</em> : s.time ? <small className="wt-time">{s.time}</small> : <small className="wt-time">—</small>}
+        {s.state === "current" ? <em className={`wt-now ${returned ? "ret" : ""}`}>{returned ? "Chờ chỉnh sửa" : "Đang xử lý"}</em> : s.time ? <small className="wt-time">{s.time}</small> : <small className="wt-time">—</small>}
       </div>
     </div>
   );
 }
 
-function FlowCard({ d, go }) {
+function FlowCard({ d, go, onRemind }) {
   const [nudged, setNudged] = useState(false);
   const total = d.steps.length;
   const done = d.steps.filter((s) => s.state === "done").length;
@@ -50,7 +50,7 @@ function FlowCard({ d, go }) {
       </header>
 
       <div className="wt-steps" style={{ gridTemplateColumns: `repeat(${total}, minmax(110px, 1fr))` }}>
-        {d.steps.map((s, i) => <Step key={i} s={s} i={i} next={d.steps[i + 1]} />)}
+        {d.steps.map((s, i) => <Step key={i} s={s} i={i} next={d.steps[i + 1]} returned={!!d.returned} />)}
       </div>
 
       <footer className="wt-foot">
@@ -61,7 +61,7 @@ function FlowCard({ d, go }) {
           </div>
         ) : <div className="wt-who muted">Không có bước đang chờ</div>}
         <div className="wt-actions">
-          <button className="btn ghost sm" onClick={() => setNudged(true)} disabled={nudged}><Icon name="bell" size={14} />{nudged ? "Đã gửi nhắc" : "Nhắc việc"}</button>
+          <button className="btn ghost sm" onClick={() => { setNudged(true); onRemind && onRemind(d.id); }} disabled={nudged}><Icon name="bell" size={14} />{nudged ? "Đã gửi nhắc" : "Nhắc việc"}</button>
           <button className="btn primary sm" onClick={() => go("doc", { id: d.id })}>Xem chi tiết <Icon name="chevron" size={14} /></button>
         </div>
       </footer>
@@ -69,7 +69,7 @@ function FlowCard({ d, go }) {
   );
 }
 
-export default function Workflow({ docs, go }) {
+export default function Workflow({ docs, go, onRemind }) {
   const [f, setF] = useState("all");
   const [q, setQ] = useState("");
   const active = docs.filter((d) => !["done", "published", "rejected"].includes(d.status));
@@ -77,7 +77,7 @@ export default function Workflow({ docs, go }) {
   const count = (k) => active.filter((d) => d.status === k).length;
   const kpis = [
     { label: "Đang trong luồng", value: active.length, icon: "flow", tone: "blue" },
-    { label: "Chờ phê duyệt", value: count("pending") + count("processing"), icon: "clock", tone: "amber" },
+    { label: "Chờ phê duyệt", value: count("pending") + count("returned"), icon: "clock", tone: "amber" },
     { label: "Chờ ký số", value: count("signing"), icon: "sign", tone: "purple" },
     { label: "Ưu tiên cao", value: active.filter((d) => d.priority === "Cao").length, icon: "warn", tone: "red" },
   ];
@@ -108,7 +108,7 @@ export default function Workflow({ docs, go }) {
       </div>
 
       <div className="wt-list">
-        {list.length === 0 ? <div className="card empty"><Icon name="inbox" size={36} /><p>Không có văn bản phù hợp</p></div> : list.map((d) => <FlowCard key={d.id} d={d} go={go} />)}
+        {list.length === 0 ? <div className="card empty"><Icon name="inbox" size={36} /><p>Không có văn bản phù hợp</p></div> : list.map((d) => <FlowCard key={d.id} d={d} go={go} onRemind={onRemind} />)}
       </div>
     </div>
   );

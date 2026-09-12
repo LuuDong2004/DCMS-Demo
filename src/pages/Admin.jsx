@@ -63,13 +63,14 @@ export function WorkflowConfig() {
   );
 }
 
-export function Logs() {
+export function Logs({ logs = LOGS }) {
   const [q, setQ] = useState("");
-  const list = LOGS.filter((l) => (l.actor + l.action + l.target + l.detail).toLowerCase().includes(q.toLowerCase()));
-  const tone = (a) => (a.includes("REJECT") ? "danger" : a.includes("SIGN") || a.includes("APPROVE") ? "ok" : a.includes("WEBHOOK") || a.includes("INGEST") ? "purple" : "info");
+  const list = logs.filter((l) => (l.actor + l.action + l.target + l.detail).toLowerCase().includes(q.toLowerCase()));
+  const TONE = { REJECT: "danger", REVISE: "orange", SIGN: "ok", APPROVE: "ok", PUBLISH: "ok", COMPLETE: "ok", WEBHOOK_IN: "purple", WEBHOOK_OUT: "purple", INGEST_EMAIL: "purple", REMIND: "muted", HEALTH_CHECK: "muted" };
+  const tone = (a) => TONE[a] || "info";
   return (
     <div className="page">
-      <div className="page-head"><div><h1>Nhật ký hệ thống</h1><p className="muted">Audit log ghi nhận mọi thao tác của người dùng, AI Agent và hệ thống.</p></div><button className="btn ghost"><Icon name="download" size={16} />Xuất log</button></div>
+      <div className="page-head"><div><h1>Nhật ký hệ thống</h1><p className="muted">Audit log ghi nhận mọi thao tác của người dùng, AI Agent và hệ thống · {logs.length} bản ghi</p></div><button className="btn ghost"><Icon name="download" size={16} />Xuất log</button></div>
       <Card pad={false}>
         <div className="toolbar"><label className="search"><Icon name="search" size={16} /><input placeholder="Tìm theo người thực hiện, hành động, đối tượng…" value={q} onChange={(e) => setQ(e.target.value)} /></label></div>
         <table className="tbl mono">
@@ -81,15 +82,15 @@ export function Logs() {
   );
 }
 
-export function Integrations() {
+export function Integrations({ integrations = INTEGRATIONS, onIngest, onCheck }) {
   return (
     <div className="page">
-      <div className="page-head"><div><h1>Tích hợp hệ thống</h1><p className="muted">Integration Layer kết nối DCMS với các hệ thống quản trị đang vận hành.</p></div><button className="btn primary"><Icon name="plus" size={16} />Thêm kết nối</button></div>
+      <div className="page-head"><div><h1>Tích hợp hệ thống</h1><p className="muted">Integration Layer kết nối DCMS với các hệ thống quản trị đang vận hành. Bấm "Nhận tài liệu mẫu" để mô phỏng hệ thống nguồn đẩy văn bản vào DCMS qua API / Webhook.</p></div><button className="btn primary"><Icon name="plus" size={16} />Thêm kết nối</button></div>
       <div className="sum-grid">
-        {INTEGRATIONS.map((x) => (
+        {integrations.map((x) => (
           <Card key={x.name} title={<span className="with-ic"><Icon name="plug" size={18} />{x.name}</span>} action={<Badge tone="ok">{x.status}</Badge>}>
             <dl className="dl compact"><dt>Hệ thống</dt><dd>{x.vendor}</dd><dt>Phương thức</dt><dd>{x.mode}</dd><dt>Tài liệu đã nhận</dt><dd>{x.docs}</dd><dt>Đồng bộ cuối</dt><dd>{x.last}</dd></dl>
-            <div className="page-actions"><button className="btn ghost sm">Cấu hình</button><button className="btn ghost sm"><Icon name="refresh" size={14} />Kiểm tra</button></div>
+            <div className="page-actions"><button className="btn primary sm" onClick={() => onIngest && onIngest(x.name)}><Icon name="download" size={14} />Nhận tài liệu mẫu</button><button className="btn ghost sm" onClick={() => onCheck && onCheck(x.name)}><Icon name="refresh" size={14} />Kiểm tra</button></div>
           </Card>
         ))}
       </div>
