@@ -10,6 +10,7 @@ import Workflow from "./pages/Workflow";
 import WorkflowDetail from "./pages/WorkflowDetail";
 import { AIAnalyze, AISuggest, AISummary } from "./pages/AIAgent";
 import { Users, Roles, WorkflowConfig, Logs, Integrations } from "./pages/Admin";
+import Landing from "./pages/Landing";
 import "./App.css";
 
 const ACTIONABLE = ["pending", "signing", "signed", "returned"];
@@ -20,7 +21,7 @@ const TOAST_MSG = {
 };
 
 export default function App() {
-  const parse = () => { const raw = location.hash ? location.hash.replace(/^#\/?/, "") : location.pathname.replace(/^\/+/, ""); const [p = "home", id] = decodeURIComponent(raw).split("/"); return { page: p || "home", params: id ? (p === "create" ? { dir: id } : { id }) : {} }; };
+  const parse = () => { const raw = location.hash ? location.hash.replace(/^#\/?/, "") : location.pathname.replace(/^\/+/, ""); const [p = "landing", id] = decodeURIComponent(raw).split("/"); return { page: p || "landing", params: id ? (p === "create" ? { dir: id } : { id }) : {} }; };
   const [route, setRoute] = useState(parse);
   useEffect(() => { if (location.hash) history.replaceState(null, "", "/" + location.hash.replace(/^#\/?/, "") + location.search); const h = () => setRoute(parse()); window.addEventListener("popstate", h); return () => window.removeEventListener("popstate", h); }, []);
 
@@ -131,7 +132,7 @@ export default function App() {
   const count = (fn) => docs.filter(fn).length;
   const todoCount = count((d) => ACTIONABLE.includes(d.status));
   const MENU = [
-    { group: null, items: [{ id: "home", label: "Trang chủ", icon: "home" }] },
+    { group: null, items: [{ id: "home", label: "Trang chủ", icon: "home" }, { id: "landing", label: "Giới thiệu hệ thống", icon: "sparkles" }] },
     { group: "Văn bản", items: [{ id: "in", label: "Văn bản đến", icon: "inbox", count: count((d) => d.dir === "in") }, { id: "out", label: "Văn bản đi", icon: "send", count: count((d) => d.dir === "out") }, { id: "docs", label: "Tất cả văn bản", icon: "docs" }] },
     { group: "Phê duyệt", items: [{ id: "todo", label: "Cần xử lý", icon: "clock", count: todoCount, hot: true }, { id: "done", label: "Đã xử lý", icon: "check" }, { id: "workflow", label: "Theo dõi quy trình", icon: "flow" }, { id: "create", label: "Tạo văn bản", icon: "plus" }] },
     { group: "AI Agent", items: [{ id: "ai", label: "Phân tích văn bản", icon: "ai" }, { id: "ai-suggest", label: "Đề xuất xử lý", icon: "bulb" }, { id: "ai-summary", label: "Tóm tắt thông tin", icon: "summary" }] },
@@ -167,6 +168,13 @@ export default function App() {
 
   const activeId = page === "doc" ? "docs" : page === "wf" ? "workflow" : page;
   const submitSearch = (e) => { e.preventDefault(); setSearch((s) => ({ q: query.trim(), n: s.n + 1 })); go("docs"); };
+
+  if (page === "landing") return (
+    <>
+      <Landing go={go} theme={theme} onToggleTheme={toggleTheme} />
+      {ripple && <span key={ripple.id} className={`theme-ripple to-${ripple.to}`} style={{ left: ripple.x, top: ripple.y, "--r": `${ripple.end}px` }} />}
+    </>
+  );
 
   return (
     <div className={`app ${collapsed ? "collapsed" : ""}`}>

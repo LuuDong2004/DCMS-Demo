@@ -49,16 +49,21 @@ function Glass({ x, y, s, side }) {
   );
 }
 
-export default function AIHeroNova() {
+export default function AIHeroNova({ t }) {
+  const names = t?.novaSources;
+  const stages = names ? STAGES.map((st, i) => ({ ...st, label: t.novaStages[i] })) : STAGES;
+  const left = names ? LEFT.map((s, i) => ({ ...s, name: names[i] })) : LEFT;
+  const right = names ? RIGHT.map((s, i) => ({ ...s, name: names[i + 3] })) : RIGHT;
+  const doneLabel = t?.novaDone || "Đã xử lý";
   const lx = CX - R - 14, rx = CX + R + 14;
   const flows = [
-    ...LEFT.map((s, i) => ({ s, d: curve(LPOS[i][0] + CW + 3, LPOS[i][1] + CH / 2, lx, CY) })),
-    ...RIGHT.map((s, i) => ({ s, d: curve(W - LPOS[i][0] - CW - 3, LPOS[i][1] + CH / 2, rx, CY) })),
+    ...left.map((s, i) => ({ s, d: curve(LPOS[i][0] + CW + 3, LPOS[i][1] + CH / 2, lx, CY) })),
+    ...right.map((s, i) => ({ s, d: curve(W - LPOS[i][0] - CW - 3, LPOS[i][1] + CH / 2, rx, CY) })),
   ];
   const order = [0, 3, 1, 4, 2, 5];
   const down = `M${CX},${CY + R + 12} L${CX},${TRACK_Y - 24}`;
   const track = `M${TRACK_X0},${TRACK_Y} L${TRACK_X1},${TRACK_Y}`;
-  const step = (TRACK_X1 - TRACK_X0) / (STAGES.length - 1);
+  const step = (TRACK_X1 - TRACK_X0) / (stages.length - 1);
   const stars = [[120, 24], [300, 16], [620, 28], [820, 60], [40, 350], [860, 350], [250, 330], [710, 330], [520, 18]];
 
   return (
@@ -124,7 +129,7 @@ export default function AIHeroNova() {
         <rect x={TRACK_X0 - 60} y={TRACK_Y - 3} width="120" height="6" rx="3" fill="url(#nvBeam)">
           <animate attributeName="x" from={TRACK_X0 - 60} to={TRACK_X1 - 60} dur="4s" repeatCount="indefinite" />
         </rect>
-        {STAGES.map((st, i) => {
+        {stages.map((st, i) => {
           const x = TRACK_X0 + i * step;
           return (
             <foreignObject key={st.label} x={x - 60} y={TRACK_Y - 32} width="120" height="84">
@@ -137,10 +142,10 @@ export default function AIHeroNova() {
         })}
 
         {order.map((idx, k) => <Chip key={idx} path={flows[idx].d} color={flows[idx].s.color} label={flows[idx].s.name} delay={k * 0.7} />)}
-        <Chip path={down} color="#3fd0ff" label="Đã xử lý" delay={0.5} dur={2.6} />
+        <Chip path={down} color="#3fd0ff" label={doneLabel} delay={0.5} dur={2.6} />
 
-        {LEFT.map((s, i) => <Glass key={s.name} x={LPOS[i][0]} y={LPOS[i][1]} s={s} side="l" />)}
-        {RIGHT.map((s, i) => <Glass key={s.name} x={W - LPOS[i][0] - CW} y={LPOS[i][1]} s={s} side="r" />)}
+        {left.map((s, i) => <Glass key={s.name} x={LPOS[i][0]} y={LPOS[i][1]} s={s} side="l" />)}
+        {right.map((s, i) => <Glass key={s.name} x={W - LPOS[i][0] - CW} y={LPOS[i][1]} s={s} side="r" />)}
       </svg>
     </div>
   );
